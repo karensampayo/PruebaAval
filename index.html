@@ -1,0 +1,122 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Prueba Aval - Karen Sampayo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/mystyle.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="MyCalculator">
+        <div id="parent">
+            <div id="child">
+                <div class="screen">
+                    <iframe width="210" height="50" src="result.html" name="result"></iframe>
+                    <!--<input id="screen" value="0"/>-->
+                </div>
+            </div>
+            <div class="contentCalculator">
+                <ul class="buttonsCalculator">
+                    <li class="clear"><button value="c" type="reset">C</button></li>
+                    <li><button value="()" class="val">()</button></li>
+                    <li><button value="÷" id="percent">&divide;</button></li>
+                    <li><button value="/" id="divide">/</button></li>
+                    <li><button value="7" class="val">7</button></li>
+                    <li><button value="8" class="val">8</button></li>
+                    <li><button value="9" class="val">9</button></li>
+                    <li><button value="*" id="multiply">x</button></li>
+                    <li><button value="4" class="val">4</button></li>
+                    <li><button value="5" class="val">5</button></li>
+                    <li><button value="6" class="val">6</button></li>
+                    <li><button value="-" id="minus">-</button></li>
+                    <li><button value="1" class="val">1</button></li>
+                    <li><button value="2" class="val">2</button></li>
+                    <li><button value="3" class="val">3</button></li>
+                    <li><button value="+" id="plus">+</button></li>
+                    <li><button value="+-" id="sign">+/-</button></li>
+                    <li><button value="0" class="val">0</button></li>
+                    <li><button value="." class="val">.</button></li>
+                    <li><button value="=" type="submit" id="equal">=</button></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            memoryValue = 0;
+            memoryfunction = '';
+            newNumbers = true;
+
+            var screen = function (p) {
+                var iframe = $('iframe[name=result]').contents().find('#screen');
+                
+                if(newNumbers){
+                    iframe.val(p);
+                    newNumbers = false;
+                }else{
+                    var valIni = iframe.val();
+                    memoryValue = (valIni == 0) ? p: valIni+p;
+                    
+                    iframe.val(memoryValue);
+                }
+                
+            }
+
+            var selectFuntion = function (p) {
+                memoryValue = $('iframe[name=result]').contents().find('#screen').val();
+                memoryfunction = p;
+                newNumbers = true;
+            }
+
+            $('#sign').click(function () {
+                $('iframe[name=result]').contents().find('#screen').val($('iframe[name=result]').contents().find('#screen').val() * -1);
+            });
+
+            var getResult = function () {
+                
+                var valCurrent = $('iframe[name=result]').contents().find('#screen').val();
+
+                switch (memoryfunction) {
+                    case '+':
+                        result = parseFloat(memoryValue) + parseFloat(valCurrent);
+                    break;
+                    case '-':
+                        result = parseFloat(memoryValue) - parseFloat(valCurrent);
+                    break;
+                    case '*':
+                        result = parseFloat(memoryValue) * parseFloat(valCurrent);
+                    break;
+                    case '/':
+                        result = parseFloat(memoryValue) / parseFloat(valCurrent);
+                    break;
+                }
+                
+                newNumbers = true;
+                screen(result);
+            };
+
+            $('.val').click(function (e) {
+                screen(e.target.value);
+            });
+            $('#divide, #multiply, #minus, #plus').click(function (e) {
+                selectFuntion(e.target.value);
+            });
+            $('.clear').click(function () {
+                memoryValue = 0;
+                memoryfunction = '';
+                $('iframe[name=result]').contents().find('#screen').val("0");
+            });
+            $('#equal').click(function () {
+                getResult();
+            });
+        });
+    </script>
+</body>
+
+</html>
